@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {onMounted, reactive, shallowRef} from 'vue'
-import {RandomItemGenerator} from "./RandomItemGenerator.ts";
+import { onMounted, reactive, shallowRef } from 'vue';
+import { RandomItemGenerator } from './RandomItemGenerator.ts';
 
 const WORDS = [
   { kanji: '暇', translation: 'свободный' },
@@ -30,11 +30,11 @@ const WORDS = [
   { kanji: '妻', translation: 'моя жена' },
   { kanji: '奥さん', translation: 'его жена' },
 ] as const;
-type Word = typeof WORDS[number];
+type Word = (typeof WORDS)[number];
 
 type Round = {
-  variants: Word[],
-  currentWord: Word,
+  variants: Word[]
+  currentWord: Word
 };
 
 const round = shallowRef<Round | null>(null);
@@ -46,13 +46,13 @@ const count = reactive({
 const roundWordGenerator = new RandomItemGenerator(WORDS);
 
 function generateVariants(currentWord: Word) {
-  const restWords = WORDS.filter(x => x !== currentWord);
+  const restWords = WORDS.filter((x) => x !== currentWord);
 
   return restWords
-      .sort(() => Math.random() * 2 - 1)
-      .slice(0, 5)
-      .concat(currentWord)
-      .sort(() => Math.random() * 2 - 1);
+    .sort(() => Math.random() * 2 - 1)
+    .slice(0, 5)
+    .concat(currentWord)
+    .sort(() => Math.random() * 2 - 1);
 }
 
 function getRound() {
@@ -61,7 +61,7 @@ function getRound() {
   return {
     variants: generateVariants(currentWord),
     currentWord,
-  }
+  };
 }
 
 function checkAnswer(round: Round, word: Word) {
@@ -94,16 +94,25 @@ function handleAnswerClick(word: Word) {
 </script>
 
 <template>
-  <div class="text-white w-700px h-vh bg-indigo-300 p-15px flex flex-col items-center" v-if="round">
-    <div class="font-600 font-size-60px">{{ round.currentWord.kanji ?? '-' }}</div>
+  <div
+    v-if="round"
+    class="text-white w-700px h-vh bg-indigo-300 p-15px flex flex-col items-center"
+  >
+    <div class="font-600 font-size-60px">
+      {{ round.currentWord.kanji ?? '-' }}
+    </div>
     <div>{{ count }}</div>
     <div class="grid grid-cols-3 gap-10px mt-auto pb-70px">
-      <button v-for="variant in round.variants" class="rounded-8px bg-white text-black px-10px py-5px border-black capitalize font-size-20px font-700" @click="handleAnswerClick(variant)">
+      <button
+        v-for="variant in round.variants"
+        :key="variant.kanji"
+        class="rounded-8px bg-white text-black px-10px py-5px border-black capitalize font-size-20px font-700"
+        @click="handleAnswerClick(variant)"
+      >
         {{ variant.translation }}
       </button>
     </div>
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

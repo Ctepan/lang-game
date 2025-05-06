@@ -1,5 +1,5 @@
 function getWeight(stat: ItemStat) {
-  return 1 / (stat.count + 1) ** 3
+  return 1 / (stat.count + 1) ** 3;
 }
 
 interface ItemStat {
@@ -7,12 +7,12 @@ interface ItemStat {
 }
 
 export class RandomItemGenerator<T> {
-  private readonly array: readonly T[]
+  private readonly array: readonly T[];
   private readonly weights: Map<T, ItemStat>;
 
   constructor(array: readonly T[]) {
     this.array = array;
-    this.weights = new Map(array.map(x => [x, { count: 0 }]));
+    this.weights = new Map(array.map((x) => [x, { count: 0 }]));
   }
 
   nextItem(): T {
@@ -20,7 +20,7 @@ export class RandomItemGenerator<T> {
     const roll = Math.random() * totalWeight;
     let current = 0;
 
-    for (let [item, stat] of this.weights) {
+    for (const [item, stat] of this.weights) {
       current += getWeight(stat);
 
       if (roll <= current) return item;
